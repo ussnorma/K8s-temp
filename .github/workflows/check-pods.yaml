@@ -21,6 +21,7 @@ jobs:
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
         echo "qqqqqqqqqqqqqqq"
         ip a
+        where ssh
         ssh -p 2222 ${SERVER_USER}@localhost pwd
       shell: bash
       env:
