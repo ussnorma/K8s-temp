@@ -19,7 +19,7 @@ jobs:
         ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
-        sshpass -p ${PASSWORD} ssh -p 2222 ${SERVER_USER}@localhost "kubectl get pods -A"
+        sshpass -p ${PASSWORD} ssh -p 2222 ${SERVER_USER}@localhost "kubectl get pods -A --context="k3s""
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
