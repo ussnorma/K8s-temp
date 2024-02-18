@@ -21,7 +21,6 @@ jobs:
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
         ssh -p 2222 ${SERVER_USER}@localhost 
         pwd
-        scp -P 2222 -r ./.github/workflows ${SERVER_USER}@localhost:<./>
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
