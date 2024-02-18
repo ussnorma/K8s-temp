@@ -13,12 +13,14 @@ jobs:
     - name: Creating SSH key and establishing SSH 
       run: |
         mkdir -p ~/.ssh/
+        eval `ssh-agent -s`
         echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
         ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT}
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
+        ssh -p 2222 ${SERVER_USER}@localhost whoami
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -27,10 +29,3 @@ jobs:
         BASTION_USER: ${{ secrets.BASTION_USER }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
         SERVRE_USER: ${{ secrets.SERVER_USER }}
-    - uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        port: ${{ secrets.PORT }}
-        password: ${{ secrets.PASSWORD }}
-        script: whoami
