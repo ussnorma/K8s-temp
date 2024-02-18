@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Creating SSH key and establishing SSH tunnel
+    - name: Creating SSH key and establishing SSH 
       run: |
         mkdir -p ~/.ssh/
         echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
