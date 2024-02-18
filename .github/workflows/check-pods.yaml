@@ -12,12 +12,14 @@ jobs:
     - uses: actions/checkout@v2
     - name: Creating SSH key and establishing SSH tunnel
       run: |
-       mkdir ~/.ssh
-       eval `ssh-agent -s`
-       ssh-add - <<< "${SSH_PRIVATE_KEY}"
-       ssh-keyscan -p 32510 ${BASTION_IP} >> ~/.ssh/known_hosts
-       ssh ${BASTION_USER}@${BASTION_IP} -p 32510 ssh-keyscan ${SERVER_IP} >> ~/.ssh/known_hosts
-       ssh -o ProxyCommand="ssh -W %h:%p ${BASTION_USER}@${BASTION_IP} -p 32510" ${SERVER_USER}@${SERVER_IP} "kubectl get pods -A" >> init_pods.log
+        mkdir -p ~/.ssh/
+        echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
+        ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
+        sleep 5
+        echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
+        ssh -p 2222 ${SERVER_USER}@localhost whoami
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
