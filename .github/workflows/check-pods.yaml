@@ -29,7 +29,7 @@ jobs:
         SERVRE_USER: ${{ secrets.SERVER_USER }}
     - uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.SERVER_IP }}
+        host: localhost
         username: ${{ secrets.SERVER_USER }}
         port: ${{ secrets.PORT }}
         script: whoami
