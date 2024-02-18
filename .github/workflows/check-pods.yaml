@@ -13,15 +13,11 @@ jobs:
     - name: Creating SSH key and establishing SSH tunnel
       run: |
         mkdir -p ~/.ssh/
-        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
-        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         chmod 600 ~/.ssh/id_rsa
-        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
         echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
-        ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT}
-        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq1111" 
+        ssh -fNL 2222:${SERVER_IP}:22 <user>@${BASTION_IP} -p ${BASTION_PORT}
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
         ssh -p 2222 ${SERVER_USER}@localhost "<shell command>"
