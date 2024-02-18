@@ -15,7 +15,9 @@ jobs:
         mkdir -p ~/.ssh/
         echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         chmod 600 ~/.ssh/id_rsa
+        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
         ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
         sleep 5
