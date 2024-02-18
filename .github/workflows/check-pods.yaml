@@ -17,7 +17,7 @@ jobs:
         echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
-        ssh -fNL 2222:${SERVER_IP}:22 <user>@${BASTION_IP} -p ${BASTION_PORT} 
+        ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
         ssh -p 2222 ${SERVER_USER}@localhost whoami
