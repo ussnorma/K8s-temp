@@ -18,9 +18,8 @@ jobs:
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
         ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
         sleep 5
-        echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
-        cat ~/.ssh/known_hosts
-        sshpass -p ${PASSWORD} ssh -p 2222 ${SERVER_USER}@localhost ip a
+#        echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
+# sshpass -p ${PASSWORD} ssh -p 2222 ${SERVER_USER}@localhost ip a
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -30,3 +29,11 @@ jobs:
         SERVER_IP: ${{ secrets.SERVER_IP }}
         SERVER_USER: ${{ secrets.SERVER_USER }}
         PASSWORD: ${{ secrets.PASSWORD }}
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: localhost
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.PASSWORD }}
+        port: 2222
+        script: whoami
