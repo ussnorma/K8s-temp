@@ -17,10 +17,8 @@ jobs:
         echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
-        ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT}
-        sleep 5
-        echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
-        ssh -p 2222 ${SERVER_USER}@localhost whoami
+        ssh -o ProxyCommand="ssh -W %h:%p ${BASTION_USER}@${BASTION_IP} -p 32510" ${SERVRE_USER}@${SERVER_IP} "kubectl get pods -A" >> output.log
+        cat output.log
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
