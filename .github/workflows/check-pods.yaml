@@ -16,6 +16,7 @@ jobs:
         eval `ssh-agent -s`
         ssh-add - <<< "${SSH_PRIVATE_KEY}"
         ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP} >> ~/.ssh/known_hosts
+        ssh ${BASTION_USER}@${BASTION_IP} -p 32510 ssh-keyscan ${SERVER_IP} >> ~/.ssh/known_hosts
         ssh -o ProxyCommand="ssh -W %h:%p ${BASTION_USER}@${BASTION_IP} -p 32510" ${SERVRE_USER}@${SERVER_IP} "kubectl get pods -A" >> output.log
         cat output.log
       shell: bash
