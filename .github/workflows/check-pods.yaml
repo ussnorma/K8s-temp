@@ -20,7 +20,7 @@ jobs:
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
         echo "qqqqqqqqqqqqqqq"
-        ssh -p 2222 ${SERVER_USER}@localhost 
+        ssh ${SERVER_USER}@localhost -p 2222
         pwd
       shell: bash
       env:
