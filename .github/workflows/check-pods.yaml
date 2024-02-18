@@ -19,8 +19,6 @@ jobs:
         ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT}
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
-        apt install ssh-agent
-        ssh -p 2222 ${SERVER_USER}@localhost pwd
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -35,10 +33,3 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         port: ${{ secrets.PORT }}
         script: whoami
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        BASTION_IP: ${{ secrets.BASTION_IP }}
-        BASTION_PORT: ${{ secrets.BASTION_PORT }}
-        BASTION_USER: ${{ secrets.BASTION_USER }}
-        SERVER_IP: ${{ secrets.SERVER_IP }}
-        SERVRE_USER: ${{ secrets.SERVER_USER }}
