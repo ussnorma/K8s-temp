@@ -1,0 +1,31 @@
+name: Check Pods
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Creating SSH key and establishing SSH tunnel
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
+        ssh -fNL 2222:${SERVER_IP}:22 <user>@${BASTION_IP} -p ${BASTION_PORT} 
+        sleep 5
+        echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
+        ssh -p 2222 ${SERVER_USER}@localhost "<shell command>"
+        scp -P 2222 -r ./.github/workflows ${SERVER_USER}@localhost:<target_folder>
+      shell: bash
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        BASTION_IP: ${{ secrets.BASTION_IP }}
+        BASTION_PORT: ${{ secrets.BASTION_PORT }}
+        BASTION_USER: ${{ secrets.BASTION_USER }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        SERVRE_USER: ${{ secrets.SERVER_USER }}
