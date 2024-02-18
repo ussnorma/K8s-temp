@@ -14,11 +14,13 @@ jobs:
       run: |
         mkdir -p ~/.ssh/
         eval `ssh-agent -s`
-        ssh-add - <<< "${SSH_PRIVATE_KEY}"
-        ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP} >> ~/.ssh/known_hosts
-        ssh ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} ssh-keyscan ${SERVER_IP} >> ~/.ssh/known_hosts
-        ssh -o ProxyCommand="ssh -W %h:%p ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT}" ${SERVRE_USER}@${SERVER_IP} "kubectl get pods -A" >> output.log
-        cat output.log
+        echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
+        ssh -fNL 2222:${SERVER_IP}:22 <user>@${BASTION_IP} -p ${BASTION_PORT} 
+        sleep 5
+        echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
+        ssh -p 2222 ${SERVER_USER}@localhost "<shell command>"
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
