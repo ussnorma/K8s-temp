@@ -19,6 +19,7 @@ jobs:
         ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
+        cat ~/.ssh/known_hosts
         ssh -p 2222 ${SERVER_USER}@localhost whoami
       shell: bash
       env:
