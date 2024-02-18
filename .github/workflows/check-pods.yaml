@@ -13,7 +13,6 @@ jobs:
     - name: Creating SSH key and establishing SSH 
       run: |
         mkdir -p ~/.ssh/
-        eval `ssh-agent -s`
         echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
