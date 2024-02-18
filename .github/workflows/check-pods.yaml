@@ -20,7 +20,8 @@ jobs:
         sleep 5
         echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
-        ssh -p 2222 ${SERVER_USER}@localhost "pwd"
+        ssh -p 2222 ${SERVER_USER}@localhost 
+        pwd
         scp -P 2222 -r ./.github/workflows ${SERVER_USER}@localhost:<target_folder>
       shell: bash
       env:
