@@ -19,7 +19,9 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
-        ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
+        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
+        ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT}
+        echo "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq1111" 
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
         ssh -p 2222 ${SERVER_USER}@localhost "<shell command>"
