@@ -20,7 +20,7 @@ jobs:
         sleep 5
         echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
         cat ~/.ssh/known_hosts
-        ssh -p 2222 ${SERVER_USER}@localhost whoami
+        sshpass -p ${PASSWORD} ssh -p 2222 ${SERVER_USER}@localhost whoami
       shell: bash
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -29,3 +29,4 @@ jobs:
         BASTION_USER: ${{ secrets.BASTION_USER }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
         SERVER_USER: ${{ secrets.SERVER_USER }}
+        PASSWORD: ${{ secrets.PASSWORD }}
