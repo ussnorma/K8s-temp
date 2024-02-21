@@ -23,7 +23,7 @@ jobs:
         password: ${{ secrets.SERVER_PASS }}
         script: |
           kubectl get pods -A > output.log
-          echo "crash-pods=$(cat output.log | grep -v 'Running\|Completed ' | wc -l)" >> $env:GITHUB_OUTPUT
+          echo "crash-pods=$(kubectl get pods -A --context='k8s' | awk 'NR!=1 {print $4}' | grep -v 'Running' | wc -l)" >> $env:GITHUB_OUTPUT
     - name: Skip Deploy?
-      if: steps.check-pods.outputs.crash-pods != 1
+      if: steps.check-pods.outputs.crash-pods != 0
       run: ls -la
