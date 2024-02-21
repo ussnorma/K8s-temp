@@ -13,7 +13,6 @@ jobs:
       id: check-pods
       uses: appleboy/ssh-action@v1.0.3
       with:
-        request_pty: true
         proxy_host: ${{ secrets.BASTION_IP }}
         proxy_port: ${{ secrets.BASTION_PORT }}
         proxy_username: ${{ secrets.BASTION_USER }}
