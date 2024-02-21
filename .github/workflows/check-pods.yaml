@@ -24,6 +24,14 @@ jobs:
         script: |
           kubectl get pods -A > output.log
           echo "crash-pods=$(kubectl get pods -A --context='k8s' | awk 'NR!=1 {print $4}' | grep -v 'Running' | wc -l)" >> $env:GITHUB_OUTPUT
-    - name: Skip Deploy?
-      if: steps.check-pods.outputs.crash-pods != 0
-      run: ls -la
+    
+    - name: SLack Notification
+      if: steps.check-pods.outputs.crash-pods == 0
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL: tests
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_COLOR: 'red'
+        SLACK_USERNAME: rtCamp
+        SLACK_TITLE: "Some pods have crashed"
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
