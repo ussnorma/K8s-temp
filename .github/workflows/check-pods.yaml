@@ -24,7 +24,7 @@ jobs:
         password: ${{ secrets.SERVER_PASS }}
         script: |
           kubectl get pods -A > output.log
-          echo "$(cat output_k3s.log)" >> crash_report 2>&1
+          echo "$(cat output.log)" >> crash_report 2>&1
           cat output.log | grep -v 'Running\|Completed ' | wc -l
           echo "crash-pods=$(cat output.log | grep -v 'Running\|Completed ' | wc -l)" >> $GITHUB_OUTPUT
     - name: Skip Deploy?
