@@ -24,8 +24,6 @@ jobs:
         password: ${{ secrets.SERVER_PASS }}
         script: |
           kubectl get pods -A > output.log
-          echo "$(cat output.log)" >> crash_report 2>&1
-          echo "crash-pods=$(cat output.log | grep -v 'Running\|Completed ' | wc -l)" >> $GITHUB_OUTPUT
     - name: Skip Deploy?
       if: steps.check-pods.outputs.crash-pods != 1
       run: printenv 
