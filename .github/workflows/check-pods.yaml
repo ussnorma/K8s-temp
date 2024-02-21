@@ -25,7 +25,6 @@ jobs:
         script: |
           kubectl get pods -A > output.log
           echo "$(cat output.log)" >> crash_report 2>&1
-          cat output.log | grep -v 'Running\|Completed ' | wc -l
           echo "crash-pods=$(cat output.log | grep -v 'Running\|Completed ' | wc -l)" >> $GITHUB_OUTPUT
     - name: Skip Deploy?
       if: steps.check-pods.outputs.crash-pods != 1
