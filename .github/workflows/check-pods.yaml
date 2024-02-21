@@ -22,8 +22,9 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         password: ${{ secrets.SERVER_PASS }}
         script: |
+          
           echo "pods-dont-work=$(cat output.log | grep -v 'Running\|Completed ' | wc -l)" >> $env:GITHUB_OUTPUT
           cat output.log | grep -v 'Running\|Completed ' | wc -l
     - name: Skip Deploy?
-      if: steps.check-pods.outputs.crash-pods != 1
+      if: steps.check-pods.outputs.crash-pods == 1
       run: ls -la
