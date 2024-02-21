@@ -2,7 +2,6 @@ name: Check Pods
 on:
   push:
     branches: [main]
-
 jobs:
   build:
     name: build
@@ -10,22 +9,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Creating SSH key and establishing SSH tunnel.
-      run: |
-        mkdir -p ~/.ssh/
-        echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        echo "$(ssh-keyscan -p ${BASTION_PORT} ${BASTION_IP})" >> ~/.ssh/known_hosts
-        ssh -fNL 2222:${SERVER_IP}:22 ${BASTION_USER}@${BASTION_IP} -p ${BASTION_PORT} 
-        sleep 5
-        echo "$(ssh-keyscan -p 2222 localhost)" >> ~/.ssh/known_hosts
-        sshpass -p ${PASSWORD} ssh -p 2222 ${SERVER_USER}@localhost kubectl get pods -A --context="k3s"
-      shell: bash
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        BASTION_IP: ${{ secrets.BASTION_IP }}
-        BASTION_PORT: ${{ secrets.BASTION_PORT }}
-        BASTION_USER: ${{ secrets.BASTION_USER }}
-        SERVER_IP: ${{ secrets.SERVER_IP }}
-        SERVER_USER: ${{ secrets.SERVER_USER }}
-        PASSWORD: ${{ secrets.PASSWORD }}
+    - name: executing remote ssh commands using password
+      id: check-pods
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        request_pty: true
+        proxy_host: ${{ secrets.BASTION_IP }}
+        proxy_port: ${{ secrets.BASTION_PORT }}
+        proxy_username: ${{ secrets.BASTION_USER }}
+        proxy_password: ${{ secrets.BASTION_PASS }}
+        host: ${{ secrets.SERVER_IP }}
+        port: ${{ secrets.SERVER_PORT }}
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PASS }}
+        script: |
+          kubectl get pods -A > output.log
+          echo "$(cat output_k3s.log)" >> crash_report 2>&1
+          cat output.log | grep -v 'Running\|Completed ' | wc -l
+          echo "crash-pods=$(cat output.log | grep -v 'Running\|Completed ' | wc -l)" >> $GITHUB_OUTPUT
+    - name: Skip Deploy?
+      if: steps.check-pods.outputs.crash-pods != 1
+      run: printenv 
