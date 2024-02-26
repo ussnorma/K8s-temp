@@ -5,7 +5,7 @@ on:
   
 jobs:
   build: 
-    runs-on: k8s-action-runner-w9kzx-vbrcx
+    runs-on: arc-runner-repo
     steps: 
      - run: echo "Hello build!"
 
