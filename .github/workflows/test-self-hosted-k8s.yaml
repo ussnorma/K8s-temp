@@ -7,5 +7,5 @@ jobs:
   build: 
     runs-on: k8s-action-runner-w9kzx-vbrcx
     steps: 
-     - run: echo "Hello build!  world"
+     - run: echo "Hello build!"
 
